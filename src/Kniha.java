@@ -62,14 +62,9 @@ public class Kniha
     }
 
 
-    // Příklad použití třídy Kniha
-    public static void main(String args) {
-        Kniha kniha1 = new Kniha("Java pro začátečníky", 2020, "John Smith", true);
-
-        System.out.println("Informace o knize:");
-        System.out.println("Název: " + kniha1.getNazev());
-        System.out.println("Rok vydání: " + kniha1.getRokVydani());
-        System.out.println("Autor: " + kniha1.getAutor());
-        System.out.println("Stav dostupnosti: " + (kniha1.StavDostupnosti() ? "Dostupná" : "Nedostupná"));
+    @Override
+    public String toString() {
+    return "Kniha: " + nazev + ", Autor(i): " + autor + ", Rok vydání: " + rok_vydani + ", Stav dostupnosti: " + (stav_dostupnosti ? "dostupná" : "vypůjčená");
     }
+
 }
