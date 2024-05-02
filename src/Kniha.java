@@ -63,8 +63,9 @@ public class Kniha
 
 
     @Override
-    public String toString() {
-    return "Kniha: " + nazev + ", Autor(i): " + autor + ", Rok vydání: " + rok_vydani + ", Stav dostupnosti: " + (stav_dostupnosti ? "dostupná" : "vypůjčená");
+    public String toString() 
+    {
+    return "Kniha: " + nazev + ", Autor: " + autor + ", Rok vydání: " + rok_vydani + ", Stav dostupnosti: " + (stav_dostupnosti ? "dostupná" : "vypůjčená");
     }
 
 }

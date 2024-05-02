@@ -1,14 +1,23 @@
 public class Roman extends Kniha 
 {
-    private String zanr;
+    public enum Zanr 
+    {
+        HISTORICKY,
+        DOBRODRUZNY,
+        DETEKTIVNI,
+        FANTASY,
+        SCI_FI
+    }
+    
+    private Zanr zanr;
 
-    public Roman(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti, String zanr) 
+    public Roman(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti, Zanr zanr) 
     {
         super(nazev, autor, rok_vydani, stav_dostupnosti);
         this.zanr = zanr;
     }
 
-    public String getZanr() 
+    public Zanr getZanr() 
     {
         return zanr;
     }
