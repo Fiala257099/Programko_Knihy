@@ -9,6 +9,13 @@
             "name": "Test",
             "request": "launch",
             "mainClass": "Test",
+            "projectName": "Programko_Knihy_2541f6e4"
+        },
+        {
+            "type": "java",
+            "name": "Test",
+            "request": "launch",
+            "mainClass": "Test",
             "projectName": "Programko_Knihy_ba78be9e"
         },
         {

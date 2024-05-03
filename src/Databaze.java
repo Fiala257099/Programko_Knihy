@@ -10,13 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class Databaze 
 {
     private Map<String,Kniha>  prvkyDatabaze;
+    
 
     Databaze()
     {
-        prvkyDatabaze = new HashMap<String, Kniha>();
+        prvkyDatabaze = new HashMap<>();
+        
     }
 
     public void setKniha(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti)
@@ -103,18 +106,26 @@ public class Databaze
         }
     }
 
-    public void odstranitKnihu(String nazev_knihy) 
-    {
-        if (prvkyDatabaze.containsKey(nazev_knihy)) 
-        {
-            prvkyDatabaze.remove(nazev_knihy);
-            System.out.println("Kniha '" + nazev_knihy + "' byla úspěšně odstraněna.");
-        } 
-        else 
-        {
-            System.out.println("Kniha s názvem '" + nazev_knihy + "' nebyla nalezena.");
+    public void odstranitKnihu(String nazev_knihy) {      
+        pripoj(); 
+        Map<String, Kniha> knihy = nactizDabaze();
+    
+        if (knihy != null && !knihy.isEmpty()) {
+            if (knihy.containsKey(nazev_knihy)) { 
+                odstranitKnihuZD(nazev_knihy); 
+                prvkyDatabaze.remove(nazev_knihy); 
+                System.out.println("Kniha '" + nazev_knihy + "' byla úspěšně odstraněna.");
+            } else {
+                System.out.println("Kniha s názvem '" + nazev_knihy + "' nebyla nalezena.");
+            }
+        } else {
+            System.out.println("Nepodařilo se načíst knihy.");
         }
-    }    
+        uzavritKomunikaci();
+    }
+    
+    
+    
 
     public void setStavDostupnosti(String nazev_knihy, boolean stav) 
     {
@@ -132,25 +143,30 @@ public class Databaze
 
     public void vypisVsechnyKnihy() 
     {
-        List<Kniha> serazeneKnihy = new ArrayList<>(prvkyDatabaze.values());
-        serazeneKnihy.sort((kniha1, kniha2) -> kniha1.getNazevKnihy().compareToIgnoreCase(kniha2.getNazevKnihy()));
-    
-        for (Kniha kniha : serazeneKnihy)
-        {
+        pripoj();
+        Map<String, Kniha> knihy = nactizDabaze();
+
+
+        if (knihy != null && !knihy.isEmpty()) {
+        System.out.println("Zde jsou knihy: ");
+        for (Kniha kniha : knihy.values()) {
             System.out.println("Název: " + kniha.getNazevKnihy());
             System.out.println("Autor: " + kniha.getAutoraKnihy());
-            if (kniha instanceof Roman) 
-            {
+            if (kniha instanceof Roman) {
                 System.out.println("Žánr: " + ((Roman) kniha).getZanr());
-            } 
-            else if (kniha instanceof Učebnice) 
-            {
+            } else if (kniha instanceof Učebnice) {
                 System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
             }
             System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
             System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
             System.out.println();
         }
+    } else {
+        System.out.println("Nepodařilo se načíst knihy.");
+    }
+    
+   
+    uzavritKomunikaci();
     }
 
     public void vyhledatKnihu(String nazev) 
@@ -417,5 +433,33 @@ public class Databaze
             System.out.println("Chyba při načítání databáze: " + e.getMessage());
             return false;
         }
+    
+
+    
+    }
+    DBConnection pripojeni = new DBConnection();
+
+    public void ulozDO() 
+    {
+        pripojeni.ulozeniKnihDoDatabaze(prvkyDatabaze);
+    }
+    public void pripoj()
+    {
+        pripojeni.getDBConnection();
+    }
+    public void vytvorStoly()
+    {
+        pripojeni.createTables();
+    }
+    public void uzavritKomunikaci()
+    {
+        pripojeni.closeConnection();
+    }
+    public Map<String, Kniha> nactizDabaze()
+    {
+        return pripojeni.nacteniKnihZDatabaze();
+    }
+    public void odstranitKnihuZD(String nazevKnihy) {
+        pripojeni.odstranitKnihuZDatabaze(nazevKnihy);
     }
 }

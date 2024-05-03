@@ -1,10 +1,11 @@
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Test 
 {
 	public static final String[] ZANRY = {"HISTORICKY", "DOBRODRUZNY", "DETEKTIVNI", "FANTASY", "SCI-FI"};
-
+	
 	public static int pouzeCelaCisla(Scanner sc) 
 	{
 		int cislo = 0;
@@ -38,7 +39,7 @@ public class Test
 		}
 		return cislo;
 	}
-
+	
 	public static void main(String[] args) 
 	{	
 		Scanner sc=new Scanner(System.in);
@@ -93,6 +94,9 @@ public class Test
 						{
 							zanr = Roman.Zanr.valueOf(typzanru);
 							mojeDatabaze.pridejRoman(nazev_knihy, jmeno_autora, rok_vydani, stav_dostupnosti, zanr);
+							mojeDatabaze.pripoj();
+							mojeDatabaze.vytvorStoly();
+							mojeDatabaze.ulozDO();
 							System.out.println("Román byl úspěšně přidán.");
 						} 
 						else 
@@ -105,6 +109,9 @@ public class Test
 						System.out.println("Zadej ročník pro který je vhodný: ");
 						vhodny_rocnik = Test.pouzeCelaCisla(sc);
 						mojeDatabaze.pridejUcebnici(nazev_knihy, jmeno_autora, rok_vydani, stav_dostupnosti, vhodny_rocnik);
+						mojeDatabaze.pripoj();
+						mojeDatabaze.vytvorStoly();
+						mojeDatabaze.ulozDO();
 						System.out.println("Učebnice uspěšně přidána.");
 						break;
 					}
