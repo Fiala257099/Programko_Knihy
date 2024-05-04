@@ -18,7 +18,7 @@ public class Databaze
 
     Databaze()
     {
-        prvkyDatabaze = new HashMap<>();
+        prvkyDatabaze = nactizDabaze();
         
     }
 
@@ -33,12 +33,21 @@ public class Databaze
     {
         Roman roman = new Roman(nazev, autor, rok_vydani, stav_dostupnosti, zanr);
         this.prvkyDatabaze.put(nazev, roman);
+        
+        vytvorStoly();
+        ulozDO();
+        
+        
     }
 
     public void pridejUcebnici(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti, int vhodny_rocnik)
     {
         Učebnice učebnice = new Učebnice(nazev, autor, rok_vydani, stav_dostupnosti, vhodny_rocnik);
         this.prvkyDatabaze.put(nazev, učebnice);
+        
+        vytvorStoly();
+        ulozDO();
+        
     }
 
 
@@ -58,7 +67,10 @@ public class Databaze
             {
                 kniha.setNazevKnihy(novyNazev);
                 System.out.println("Název knihy aktualizován: " + kniha);
-                return;
+                
+                aktualizujNazevKnihy(staryNazev, novyNazev);  
+                     
+
             }
         }
         System.out.println("Kniha s názvem " + staryNazev + " nebyla nalezená.");
@@ -71,6 +83,9 @@ public class Databaze
         {
             kniha.setAutoraKnihy(novyAutor);
             System.out.println("Autor knihy aktualizován: " + kniha);
+            
+            aktualizujAutoraKnihy(nazev_knihy, novyAutor);
+            
         } 
         else 
         {
@@ -85,6 +100,9 @@ public class Databaze
         {
             kniha.setRokVydaniKnihy(novyRokVydani);
             System.out.println("Rok vydání knihy aktualizován: " + kniha);
+            
+            aktualizujRokVydaniKnihy(nazev_knihy, novyRokVydani);
+            
         } 
         else 
         {
@@ -94,6 +112,7 @@ public class Databaze
     
     public void zmenaStavuDostupnosti(String nazev_knihy, boolean novyStav)
     {
+        
         Kniha kniha = prvkyDatabaze.get(nazev_knihy);
         if (kniha != null)
         {
@@ -107,7 +126,7 @@ public class Databaze
     }
 
     public void odstranitKnihu(String nazev_knihy) {      
-        pripoj(); 
+        
         Map<String, Kniha> knihy = nactizDabaze();
     
         if (knihy != null && !knihy.isEmpty()) {
@@ -121,7 +140,7 @@ public class Databaze
         } else {
             System.out.println("Nepodařilo se načíst knihy.");
         }
-        uzavritKomunikaci();
+        
     }
     
     
@@ -134,6 +153,10 @@ public class Databaze
         {
             kniha.setStavDostupnostiKnihy(stav);
             System.out.println("Stav dostupnosti knihy '" + nazev_knihy + "' byl aktualizován na: " + (stav ? "Dostupna" : "vypůjčena"));
+            
+            aktualizujStavDostupnostiKnihy(nazev_knihy, stav);
+            
+           
         } 
         else 
         {
@@ -141,33 +164,29 @@ public class Databaze
         }
     }
 
-    public void vypisVsechnyKnihy() 
-    {
-        pripoj();
-        Map<String, Kniha> knihy = nactizDabaze();
-
-
-        if (knihy != null && !knihy.isEmpty()) {
-        System.out.println("Zde jsou knihy: ");
-        for (Kniha kniha : knihy.values()) {
-            System.out.println("Název: " + kniha.getNazevKnihy());
-            System.out.println("Autor: " + kniha.getAutoraKnihy());
-            if (kniha instanceof Roman) {
-                System.out.println("Žánr: " + ((Roman) kniha).getZanr());
-            } else if (kniha instanceof Učebnice) {
-                System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+    public void vypisVsechnyKnihy() {
+        
+        Map<String, Kniha> prvkyDatabaze = nactizDabaze();
+    
+        if (prvkyDatabaze != null && !prvkyDatabaze.isEmpty()) {
+            System.out.println("Zde jsou knihy: ");
+            for (Kniha kniha : prvkyDatabaze.values()) {
+                System.out.println("Název: " + kniha.getNazevKnihy());
+                System.out.println("Autor: " + kniha.getAutoraKnihy());
+                if (kniha instanceof Roman) {
+                    System.out.println("Žánr: " + ((Roman) kniha).getZanr());
+                } else if (kniha instanceof Učebnice) {
+                    System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+                }
+                System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
+                System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
+                System.out.println();
             }
-            System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
-            System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
-            System.out.println();
+        } else {
+            System.out.println("Nepodařilo se načíst knihy.");
         }
-    } else {
-        System.out.println("Nepodařilo se načíst knihy.");
     }
     
-   
-    uzavritKomunikaci();
-    }
 
     public void vyhledatKnihu(String nazev) 
     {
@@ -462,4 +481,20 @@ public class Databaze
     public void odstranitKnihuZD(String nazevKnihy) {
         pripojeni.odstranitKnihuZDatabaze(nazevKnihy);
     }
+    public void aktualizujNazevKnihy(String staryNazev, String novyNazev) {
+        pripojeni.aktualizujNazevKnihy(staryNazev, novyNazev);
+    }
+    
+    public void aktualizujAutoraKnihy(String nazevKnihy, String novyAutor) {
+        pripojeni.aktualizujAutoraKnihy(nazevKnihy, novyAutor);
+    }
+    
+    public void aktualizujRokVydaniKnihy(String nazevKnihy, int novyRokVydani) {
+        pripojeni.aktualizujRokVydaniKnihy(nazevKnihy, novyRokVydani);
+    }
+    
+    public void aktualizujStavDostupnostiKnihy(String nazevKnihy, boolean novyStav) {
+        pripojeni.aktualizujStavDostupnostiKnihy(nazevKnihy, novyStav);
+    }
+    
 }

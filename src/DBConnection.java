@@ -73,14 +73,18 @@ public void ulozeniKnihDoDatabaze(Map<String, Kniha> knihy)
 
             System.out.println("Všechny knihy byly úspěšně uloženy do databáze.");
     }
+    
          
         catch (SQLException e) 
         {
             e.printStackTrace();
         }
+        
+    
     }
 
-public Map<String, Kniha> nacteniKnihZDatabaze() {
+public Map<String, Kniha> nacteniKnihZDatabaze() 
+{
     Map<String, Kniha> knihy = new HashMap<>();
     String sqlRoman = "SELECT nazev, autor, rok, zanr, dostupnost FROM roman";
     String sqlUcebnice = "SELECT nazev, autor, rok, rocnik, dostupnost FROM ucebnice";
@@ -110,17 +114,17 @@ public Map<String, Kniha> nacteniKnihZDatabaze() {
             Učebnice ucebnice = new Učebnice(nazev, autor, rok, dostupnost, rocnik);
             knihy.put(nazev, ucebnice);
         }
-
-        System.out.println("Všechny knihy byly úspěšně načteny z databáze.");
     } catch (SQLException e) {
         e.printStackTrace();
     }
-
+    
     return knihy;
+    
 }
 
-public void odstranitKnihuZDatabaze(String nazevKnihy) {
-    Map<String, Kniha> knihy = new HashMap<>();
+public void odstranitKnihuZDatabaze(String nazev_knihy) {
+
+    Map<String, Kniha> knihy = nacteniKnihZDatabaze();
     String sqlOdstranitRoman = "DELETE FROM roman WHERE nazev = ?";
     String sqlOdstranitUcebnice = "DELETE FROM ucebnice WHERE nazev = ?";
 
@@ -129,22 +133,128 @@ public void odstranitKnihuZDatabaze(String nazevKnihy) {
             PreparedStatement psOdstranitUcebnice = conn.prepareStatement(sqlOdstranitUcebnice);)
 
     {
-
-       
-        boolean isRoman = knihy.get(nazevKnihy) instanceof Roman;
-
         
-        if (isRoman) {
-            psOdstranitRoman.setString(1, nazevKnihy);
-            psOdstranitRoman.executeUpdate();
+        if (knihy.containsKey(nazev_knihy)) {
+            
+            boolean isRoman = knihy.get(nazev_knihy) instanceof Roman;
+        
+            if (isRoman) {
+                psOdstranitRoman.setString(1, nazev_knihy);
+                psOdstranitRoman.executeUpdate();
+            } else {
+                psOdstranitUcebnice.setString(1, nazev_knihy);
+                psOdstranitUcebnice.executeUpdate();
+            }
         } else {
-            psOdstranitUcebnice.setString(1, nazevKnihy);
-            psOdstranitUcebnice.executeUpdate();
+            System.out.println("Kniha s názvem '" + nazev_knihy + "' nebyla nalezena v databázi.");
         }
     } catch (SQLException e) {
         e.printStackTrace();
     }
+
 }
+public void aktualizujNazevKnihy(String staryNazev, String novyNazev) {
+    String sqlRoman = "UPDATE roman SET nazev = ? WHERE nazev = ?";
+    String sqlUcebnice = "UPDATE ucebnice SET nazev = ? WHERE nazev = ?";
+    
+    try {
+        PreparedStatement psRoman = connection.prepareStatement(sqlRoman);
+        PreparedStatement psUcebnice = connection.prepareStatement(sqlUcebnice);
+        
+        // Aktualizuj záznamy v databázi
+        psRoman.setString(1, novyNazev);
+        psRoman.setString(2, staryNazev);
+        psRoman.executeUpdate();
+        
+        psUcebnice.setString(1, novyNazev);
+        psUcebnice.setString(2, staryNazev);
+        psUcebnice.executeUpdate();
+        
+        System.out.println("Název knihy byl aktualizován v databázi.");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void aktualizujAutoraKnihy(String nazev_knihy, String novyAutor) {
+    String sqlRoman = "UPDATE roman SET autor = ? WHERE nazev = ?";
+    String sqlUcebnice = "UPDATE ucebnice SET autor = ? WHERE nazev = ?";
+    
+    try {
+        PreparedStatement psRoman = connection.prepareStatement(sqlRoman);
+        PreparedStatement psUcebnice = connection.prepareStatement(sqlUcebnice);
+        
+    
+        psRoman.setString(1, novyAutor);
+        psRoman.setString(2, nazev_knihy);
+        psRoman.executeUpdate();
+        
+        psUcebnice.setString(1, novyAutor);
+        psUcebnice.setString(2, nazev_knihy);
+        psUcebnice.executeUpdate();
+        
+        System.out.println("Autor knihy byl aktualizován v databázi.");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void aktualizujRokVydaniKnihy(String nazev_knihy, int novyRokVydani) {
+    String sqlRoman = "UPDATE roman SET rok = ? WHERE nazev = ?";
+    String sqlUcebnice = "UPDATE ucebnice SET rok = ? WHERE nazev = ?";
+    
+    try {
+        PreparedStatement psRoman = connection.prepareStatement(sqlRoman);
+        PreparedStatement psUcebnice = connection.prepareStatement(sqlUcebnice);
+        
+        
+        psRoman.setInt(1, novyRokVydani);
+        psRoman.setString(2, nazev_knihy);
+        psRoman.executeUpdate();
+        
+        psUcebnice.setInt(1, novyRokVydani);
+        psUcebnice.setString(2, nazev_knihy);
+        psUcebnice.executeUpdate();
+        
+        System.out.println("Rok vydání knihy byl aktualizován v databázi.");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void aktualizujStavDostupnostiKnihy(String nazev_knihy, boolean novyStav) {
+    String sqlUcebnice = "UPDATE ucebnice SET dostupnost = ? WHERE nazev = ?";
+    String sqlRoman = "UPDATE roman SET dostupnost = ? WHERE nazev = ?";
+    
+    try {
+        PreparedStatement psUcebnice = connection.prepareStatement(sqlUcebnice);
+        PreparedStatement psRoman = connection.prepareStatement(sqlRoman);
+        
+        psRoman.setBoolean(1, novyStav);
+        psRoman.setString(2, nazev_knihy);
+        psRoman.executeUpdate();
+        
+        psUcebnice.setBoolean(1, novyStav);
+        psUcebnice.setString(2, nazev_knihy);
+        psUcebnice.executeUpdate();
+        
+    
+        for (Kniha kniha : nacteniKnihZDatabaze().values()) {
+            if (kniha.getNazevKnihy().equals(nazev_knihy)) {
+                kniha.setStavDostupnostiKnihy(novyStav);
+                break; 
+            }
+        }
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
+
+
+
 
 
 

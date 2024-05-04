@@ -54,6 +54,8 @@ public class Test
 		boolean run=true;
 		while(run)
 		{
+			
+			mojeDatabaze.pripoj();
 			System.out.println("Vyberte požadovanou činnost:");
 			System.out.println("1 ... Vlozeni nove knihy: ");
 			System.out.println("2 ... Uprava knihy: ");
@@ -94,9 +96,6 @@ public class Test
 						{
 							zanr = Roman.Zanr.valueOf(typzanru);
 							mojeDatabaze.pridejRoman(nazev_knihy, jmeno_autora, rok_vydani, stav_dostupnosti, zanr);
-							mojeDatabaze.pripoj();
-							mojeDatabaze.vytvorStoly();
-							mojeDatabaze.ulozDO();
 							System.out.println("Román byl úspěšně přidán.");
 						} 
 						else 
@@ -109,9 +108,6 @@ public class Test
 						System.out.println("Zadej ročník pro který je vhodný: ");
 						vhodny_rocnik = Test.pouzeCelaCisla(sc);
 						mojeDatabaze.pridejUcebnici(nazev_knihy, jmeno_autora, rok_vydani, stav_dostupnosti, vhodny_rocnik);
-						mojeDatabaze.pripoj();
-						mojeDatabaze.vytvorStoly();
-						mojeDatabaze.ulozDO();
 						System.out.println("Učebnice uspěšně přidána.");
 						break;
 					}
@@ -178,12 +174,12 @@ public class Test
 					mojeDatabaze.vypisVsechnyKnihy();
 					break;
 				case 6:
-					System.out.println("Zadej název knihy co chceš vyshledat: ");
+					System.out.println("Zadej název knihy co chceš vyhledat: ");
 					nazev_knihy = sc.next();
 					mojeDatabaze.vyhledatKnihu(nazev_knihy);
 					break;
 				case 7: 
-					System.out.println("ZAdej jmeno autora pro kterého chceš vyhledat knihy: ");
+					System.out.println("Zadej jmeno autora pro kterého chceš vyhledat knihy: ");
 					jmeno_autora = sc.next();
 					mojeDatabaze.vypisKnihAutora(jmeno_autora);
 					break;
@@ -219,6 +215,9 @@ public class Test
 					run = false;
 					break;
 			}
+			
 		}
+		mojeDatabaze.uzavritKomunikaci();
+		
 	}
 }
