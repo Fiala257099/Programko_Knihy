@@ -57,12 +57,12 @@ public void ulozeniKnihDoDatabaze(Map<String, Kniha> knihy)
                     psRoman.setBoolean(5, kniha.StavDostupnosti());
                     psRoman.addBatch();
                 } 
-                else if (kniha instanceof Učebnice) 
+                else if (kniha instanceof Ucebnice) 
                 {
                     psUcebnice.setString(1, kniha.getNazevKnihy());
                     psUcebnice.setString(2, kniha.getAutoraKnihy());
                     psUcebnice.setInt(3, kniha.getRokVydaniKnihy());
-                    psUcebnice.setInt(4, ((Učebnice) kniha).getVhodny_Rocnik());
+                    psUcebnice.setInt(4, ((Ucebnice) kniha).getVhodny_Rocnik());
                     psUcebnice.setBoolean(5, kniha.StavDostupnosti());
                     psUcebnice.addBatch();
                 }
@@ -111,7 +111,7 @@ public Map<String, Kniha> nacteniKnihZDatabaze()
             int rok = rsUcebnice.getInt("rok");
             int rocnik = rsUcebnice.getInt("rocnik");
             boolean dostupnost = rsUcebnice.getBoolean("dostupnost");
-            Učebnice ucebnice = new Učebnice(nazev, autor, rok, dostupnost, rocnik);
+            Ucebnice ucebnice = new Ucebnice(nazev, autor, rok, dostupnost, rocnik);
             knihy.put(nazev, ucebnice);
         }
     } catch (SQLException e) {

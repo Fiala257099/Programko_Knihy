@@ -24,7 +24,7 @@ public class Databaze
 
     public void setKniha(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti)
     {
-        Kniha kniha = new Kniha(nazev, autor, rok_vydani, false);
+        Kniha kniha = new Kniha(nazev, autor, rok_vydani, true);
         this.prvkyDatabaze.put(nazev, kniha);
     }
 
@@ -42,8 +42,8 @@ public class Databaze
 
     public void pridejUcebnici(String nazev, String autor, int rok_vydani, boolean stav_dostupnosti, int vhodny_rocnik)
     {
-        Učebnice učebnice = new Učebnice(nazev, autor, rok_vydani, stav_dostupnosti, vhodny_rocnik);
-        this.prvkyDatabaze.put(nazev, učebnice);
+        Ucebnice ucebnice = new Ucebnice(nazev, autor, rok_vydani, stav_dostupnosti, vhodny_rocnik);
+        this.prvkyDatabaze.put(nazev, ucebnice);
         
         vytvorStoly();
         ulozDO();
@@ -118,6 +118,7 @@ public class Databaze
         {
             kniha.setStavDostupnostiKnihy(novyStav);
             System.out.println("Stav dostupnosti knihy aktualizován: " + kniha);
+            aktualizujStavDostupnostiKnihy(nazev_knihy, novyStav);
         } 
         else
         {
@@ -175,8 +176,8 @@ public class Databaze
                 System.out.println("Autor: " + kniha.getAutoraKnihy());
                 if (kniha instanceof Roman) {
                     System.out.println("Žánr: " + ((Roman) kniha).getZanr());
-                } else if (kniha instanceof Učebnice) {
-                    System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+                } else if (kniha instanceof Ucebnice) {
+                    System.out.println("Ročník: " + ((Ucebnice) kniha).getVhodny_Rocnik());
                 }
                 System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
                 System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
@@ -202,9 +203,9 @@ public class Databaze
                 {
                     System.out.println("Žánr: " + ((Roman) kniha).getZanr());
                 } 
-                else if (kniha instanceof Učebnice) 
+                else if (kniha instanceof Ucebnice) 
                 {
-                    System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+                    System.out.println("Ročník: " + ((Ucebnice) kniha).getVhodny_Rocnik());
                 }
                 System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
                 System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
@@ -243,9 +244,9 @@ public class Databaze
             {
                 System.out.println("Žánr: " + ((Roman) kniha).getZanr());
             } 
-            else if (kniha instanceof Učebnice) 
+            else if (kniha instanceof Ucebnice) 
             {
-                System.out.println("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+                System.out.println("Ročník: " + ((Ucebnice) kniha).getVhodny_Rocnik());
             }
             System.out.println("Rok vydání: " + kniha.getRokVydaniKnihy());
             System.out.println("Stav dostupnosti: " + (kniha.StavDostupnosti() ? "dostupná" : "vypůjčená"));
@@ -293,9 +294,9 @@ public class Databaze
                 if (kniha instanceof Roman) 
                 {
                     System.out.println("Název vypůjčeného románu: " + kniha.getNazevKnihy());
-                } else if (kniha instanceof Učebnice) 
+                } else if (kniha instanceof Ucebnice) 
                 {
-                    System.out.println("Název vypůjčené učebnice: " + kniha.getNazevKnihy());
+                    System.out.println("Název vypůjčené Ucebnice: " + kniha.getNazevKnihy());
                 }
             }
         }
@@ -344,9 +345,9 @@ public class Databaze
                 out.write("Žánr: " + ((Roman) kniha).getZanr());
                 out.newLine();
             } 
-            else if (kniha instanceof Učebnice) 
+            else if (kniha instanceof Ucebnice) 
             {
-                out.write("Ročník: " + ((Učebnice) kniha).getVhodny_Rocnik());
+                out.write("Ročník: " + ((Ucebnice) kniha).getVhodny_Rocnik());
                 out.newLine();
             }
             out.close();
@@ -493,7 +494,7 @@ public class Databaze
         pripojeni.aktualizujRokVydaniKnihy(nazevKnihy, novyRokVydani);
     }
     
-    public void aktualizujStavDostupnostiKnihy(String nazevKnihy, boolean novyStav) {
+    public void aktualizujStavDostupnostiKnihy(String nazevKnihy, Boolean novyStav) {
         pripojeni.aktualizujStavDostupnostiKnihy(nazevKnihy, novyStav);
     }
     

@@ -57,6 +57,7 @@ public class Test
 			
 			mojeDatabaze.pripoj();
 			System.out.println("Vyberte požadovanou činnost:");
+			System.out.println("Pro zadání mezery napište podtrřítko dole '_' ");
 			System.out.println("1 ... Vlozeni nove knihy: ");
 			System.out.println("2 ... Uprava knihy: ");
 			System.out.println("3 ... Odstraneni knihy: ");
